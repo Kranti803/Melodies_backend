@@ -6,7 +6,7 @@ import User from "./../models/userModel";
 import bcrypt from "bcrypt";
 import sendToken from "../utils/sendToken";
 import crypto from "crypto";
-import emailVerification from "../models/emailverifymodel";
+import emailVerification from "../models/emailVerifyModel";
 import sendEmail from "../utils/sendEmail";
 
 //register user
@@ -19,16 +19,7 @@ export const registerUser = catchAsyncError(
 
     let existingUser = await User.findOne({ email });
 
-    if (existingUser) {
-      if (existingUser.provider === "google")
-        return next(
-          new ErrorHandler(
-            "Email is already registered with google. Please continue with google",
-            409
-          )
-        );
-      else return next(new ErrorHandler("User already exits", 409));
-    }
+    if (existingUser) return next(new ErrorHandler("User already exits", 409));
 
     const hashedPassword: string = await bcrypt.hash(password, 10);
 
@@ -97,11 +88,15 @@ export const loginUser = catchAsyncError(
     const user = await User.findOne({ email }).select("+password");
     if (!user) return next(new ErrorHandler("Invalid credentials", 401));
 
-    if (!user.isVerified)
-      return next(new ErrorHandler("Please verify your email first", 403));
+    if (!user.password) {
+      return next(new ErrorHandler("Invalid credentials", 401));
+    }
 
     const isMatched = await bcrypt.compare(password, user.password as string);
     if (!isMatched) return next(new ErrorHandler("Invalid credentials", 401));
+
+    if (!user.isVerified)
+      return next(new ErrorHandler("Please verify your email first", 403));
 
     sendToken(res, user, `Welcome ${user.name}`);
   }
@@ -134,3 +129,13 @@ export const getUserProfile = catchAsyncError(
     });
   }
 );
+
+//forgot password
+export const forgotPassword = catchAsyncError(() => {});
+
+//forgot password
+export const resetPassword = catchAsyncError(() => {});
+
+//update profile
+// for credentials user----->>name,password, email, profile picture,
+//for google ->>>>>>name, profilepicture

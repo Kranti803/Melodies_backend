@@ -4,7 +4,7 @@ import { IUser } from "../interfaces/userInterface";
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, select: false }, //using select so that this, field won't be returned by default
     photoURL: { type: String },
     role: {
