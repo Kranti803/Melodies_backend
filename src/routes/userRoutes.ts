@@ -1,9 +1,11 @@
 import express from "express";
 import {
+  forgotPassword,
   getUserProfile,
   loginUser,
   logoutUser,
   registerUser,
+  resetPassword,
   verifyUser,
 } from "../controllers/userController";
 import isAuthenticated from "../middlewares/isAuthenticated";
@@ -24,5 +26,11 @@ router.post("/login", loginUser);
 
 //logout user
 router.get("/logout", logoutUser);
+
+//forgot password
+router.get("/forgot_password", forgotPassword);
+
+//reset password
+router.post("/reset_password/:resetToken", resetPassword);
 
 export default router;
