@@ -20,7 +20,7 @@ app.use(compression());
 //parse incoming json request
 app.use(express.json());
 
-//parse URL-encoded data (from HTML forms) into req.body
+//parse URL-encoded data (from HTML forms) into req.body(for multer)
 app.use(express.urlencoded({ extended: true }));
 
 //parse cookies from the Cookie header and populate req.cookies
