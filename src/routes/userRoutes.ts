@@ -36,17 +36,5 @@ router.get("/forgot_password", forgotPassword);
 //reset password
 router.post("/reset_password/:resetToken", resetPassword);
 
-//testing song upload
-router.post(
-  "/upload",
-  upload.single("audio"),
-  extractAudioMetaData,
-  (req:Request, res:Response) => {
-    console.log("It's working");
-    res
-      .status(200)
-      .json({ message: "Upload successful", metaData: (req as any).audioMetaData });
-  }
-);
 
 export default router;

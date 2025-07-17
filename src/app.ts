@@ -4,6 +4,7 @@ import compression from "compression";
 import globalErrorHandler from "./middlewares/globalErrorHandler";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes";
+import songRoutes from "./routes/songRoutes";
 import googleAuthentication from "./auth/googleAuth";
 
 //allow access to .env file
@@ -32,6 +33,8 @@ app.use(cookieParser());
 
 //user routes
 app.use("/api/user", userRoutes);
+//songs route
+app.use("/api/song", songRoutes);
 //google authentication
 googleAuthentication(app);
 //default route

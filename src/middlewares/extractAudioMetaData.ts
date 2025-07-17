@@ -1,5 +1,4 @@
-import { parseStream } from "music-metadata";
-import { createReadStream } from "fs";
+import { parseBuffer } from "music-metadata";
 import catchAsyncError from "../utils/asyncHandler";
 import { Request, Response, NextFunction } from "express";
 import ErrorHandler from "../utils/errorHandler";
@@ -9,21 +8,14 @@ const extractAudioMetaData = catchAsyncError(
     const file = req.file;
     if (!file) return next(new ErrorHandler("No audio file found", 400));
 
-    const audioStream = createReadStream(req?.file?.path as string);
+    // Parsing metadata from file(buffer)
+    const metadata = await parseBuffer(file.buffer);
 
-    // Parse the metadata from the stream
-    const metadata = await parseStream(audioStream, {
-      mimeType: file.mimetype,
-    });
-
-    audioStream.close();
-
-    //keeping the audioMetadata for later use
+    // Attaching the metadat to request object for later use
     (req as any).audioMetaData = metadata;
 
-    // Log the parsed metadata
-    // console.log(metadata);
     next();
   }
 );
+
 export default extractAudioMetaData;
