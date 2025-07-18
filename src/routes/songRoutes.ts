@@ -3,6 +3,7 @@ import {
   getAllSongs,
   getSingleSong,
   increaseSongPlayedCount,
+  updateRecentlyPlayed,
   uploadSong,
 } from "../controllers/songController";
 import isAuthenticated from "./../middlewares/isAuthenticated";
@@ -23,13 +24,14 @@ router.post(
 );
 
 //get all songs
-router.get("/songs", getAllSongs);
+router.get("/all", getAllSongs);
 
 //get a single song details
-router.get("/song/:songId/playing", getSingleSong);
+router.get("/:songId/playing", getSingleSong);
 
 //increase the song played count
-router.patch("/song/:songId/increase_play_count", increaseSongPlayedCount);
+router.patch("/:songId/increase_play_count", increaseSongPlayedCount);
 
+//update user's recently played songs
+router.put("/:songId/user/:userId/update_recentlyplayed", updateRecentlyPlayed);
 export default router;
-

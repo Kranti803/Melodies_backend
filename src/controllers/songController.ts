@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Request, Response, NextFunction } from "express";
 import catchAsyncError from "../utils/asyncHandler";
 import ErrorHandler from "../utils/errorHandler";
@@ -5,6 +6,7 @@ import { uploadSongToCloudinary } from "./../utils/uploadSongToCloudinary";
 import { uploadCoverImageToCloudinary } from "./../utils/uploadCoverImageToCloudinary";
 import Song from "../models/songModel";
 import { url } from "inspector";
+import User from "../models/userModel";
 
 //upload/create a new song
 export const uploadSong = catchAsyncError(
@@ -29,7 +31,7 @@ export const uploadSong = catchAsyncError(
       duration,
       common: { title, artist, album, year },
     } = (req as any).audioMetaData;
-    const song = await Song.create({
+    await Song.create({
       title,
       image: { public_id: cover_public_id, url: cover_secure_url },
       songUrl: { public_id: song_public_id, url: song_secure_url },
@@ -78,7 +80,7 @@ export const increaseSongPlayedCount = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { songId } = req.params;
 
-    if (!songId) return next(new ErrorHandler("Invalid songiId", 400));
+    if (!songId) return next(new ErrorHandler("Invalid songId", 400));
 
     await Song.findByIdAndUpdate(
       songId,
@@ -97,6 +99,56 @@ export const increaseSongPlayedCount = catchAsyncError(
 //get Trending songs
 
 //update recently played song
+export const updateRecentlyPlayed = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { songId, userId } = req.params;
+
+    if (!songId || !userId)
+      return next(new ErrorHandler("Invalid songId or userId", 400));
+
+    const user = await User.findById(userId);
+    if (!user) return next(new ErrorHandler("Invalid userId", 400));
+
+    const song = await Song.findById(songId);
+    if (!song) return next(new ErrorHandler("Invalid songId", 400));
+
+    user.recentlyPlayedSongs = user.recentlyPlayedSongs ?? [];
+
+    //removing duplicates
+    user.recentlyPlayedSongs = user.recentlyPlayedSongs.filter(
+      (id) => id.toString() !== songId.toString()
+    );
+
+    //another way of removing duplicates and adding latest at top
+    // const uniqueRecentlyPlayed = new Set(
+    //   user.recentlyPlayedSongs.map((id) => id.toString())
+    // );
+    // uniqueRecentlyPlayed.delete(songId); // Remove current song if exists
+
+    // // Create a new array with the current songId at the front + the rest (unique)
+    // user.recentlyPlayedSongs = [
+    //   new Types.ObjectId(songId),
+    //   ...Array.from(uniqueRecentlyPlayed).map((id) => new Types.ObjectId(id)),
+    // ];
+    // await user.save();
+
+    //adding to the first index
+    user.recentlyPlayedSongs.unshift(song._id);
+    //Limit to 5 recent songs
+    user.recentlyPlayedSongs.splice(5);
+
+    await user.save();
+
+    const updatedUser = await User.findById(userId).populate(
+      "recentlyPlayedSongs"
+    );
+
+    res.status(200).json({
+      success: true,
+      songs: updatedUser?.recentlyPlayedSongs,
+    });
+  }
+);
 
 //get recently played song
 

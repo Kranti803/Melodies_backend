@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 export interface IUser {
   _id: string;
   name: string;
@@ -10,4 +11,5 @@ export interface IUser {
   resetPasswordTokenExpire?: Date;
   provider: "local" | "google";
   googleId?: string;
+  recentlyPlayedSongs?:Types.ObjectId[];
 }

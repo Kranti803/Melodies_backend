@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 import { IUser } from "../interfaces/userInterface";
+import { ref } from "process";
 
 const userSchema = new Schema<IUser>(
   {
@@ -29,6 +30,11 @@ const userSchema = new Schema<IUser>(
     },
     googleId: {
       type: String,
+    },
+    recentlyPlayedSongs: {
+      type: [Types.ObjectId],
+      ref: "Song",
+      default: [],
     },
   },
   { timestamps: true }
