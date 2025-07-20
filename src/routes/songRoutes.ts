@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getAllSongs,
+  getRecentlyPlayed,
   getSingleSong,
   increaseSongPlayedCount,
   updateRecentlyPlayed,
@@ -34,4 +35,7 @@ router.patch("/:songId/increase_play_count", increaseSongPlayedCount);
 
 //update user's recently played songs
 router.put("/:songId/user/:userId/update_recentlyplayed", updateRecentlyPlayed);
+
+//get user's recently played songs
+router.get("/recently_played_songs", isAuthenticated, getRecentlyPlayed);
 export default router;

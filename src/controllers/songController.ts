@@ -1,12 +1,11 @@
-import { Types } from "mongoose";
 import { Request, Response, NextFunction } from "express";
 import catchAsyncError from "../utils/asyncHandler";
 import ErrorHandler from "../utils/errorHandler";
 import { uploadSongToCloudinary } from "./../utils/uploadSongToCloudinary";
 import { uploadCoverImageToCloudinary } from "./../utils/uploadCoverImageToCloudinary";
 import Song from "../models/songModel";
-import { url } from "inspector";
 import User from "../models/userModel";
+import { IUser } from "../interfaces/userInterface";
 
 //upload/create a new song
 export const uploadSong = catchAsyncError(
@@ -151,8 +150,19 @@ export const updateRecentlyPlayed = catchAsyncError(
 );
 
 //get recently played song
+export const getRecentlyPlayed = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = (req.user as IUser)._id;
+    const user = await User.findById(userId).populate("recentlyPlayedSongs");
+    res.status(200).json({
+      success: true,
+      songs: user?.recentlyPlayedSongs || [],
+    });
+  }
+);
 
 //get all artists
+
 
 //add a playlist
 
