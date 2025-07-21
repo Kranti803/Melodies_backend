@@ -8,10 +8,7 @@ import { Types } from "mongoose";
 //create a playlist
 export const createPlaylist = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    const {
-      playlistName,
-      description,
-    }: { playlistName: string; description: string } = req.body;
+    const { playlistName, description } = req.body;
 
     if (!playlistName || !description)
       return next(new ErrorHandler("All fields are required", 400));
@@ -35,13 +32,13 @@ export const addSongToPlaylist = catchAsyncError(
     const song = await Song.findById(songId);
     if (!song) return next(new ErrorHandler("Invalid song id", 400));
 
-    const alreadyAddedSong = playlist.songs.find(
+    const alreadyAddedSong = playlist?.songs?.find(
       (existingSong) => existingSong._id.toString() === songId
     );
     if (alreadyAddedSong)
       return next(new ErrorHandler("Song already exists in the playlist", 400));
 
-    playlist.songs.push(new Types.ObjectId(songId));
+    playlist?.songs?.push(new Types.ObjectId(songId));
     await playlist.save();
     res.status(200).json({
       success: true,
@@ -56,17 +53,41 @@ export const removeFromPlaylist = catchAsyncError(
     const { playlistId, songId } = req.params;
     if (!playlistId || !songId)
       return next(new ErrorHandler("Invalid playlist id or song id", 400));
-    let playlist = await Playlist.findById(playlistId).populate("songs");
+    let playlist = await Playlist.findById(playlistId);
     if (!playlist) return next(new ErrorHandler("Invalid playlist id", 400));
-    // const song = await Song.findById(songId);
-    // if (!song) return next(new ErrorHandler("Invalid song id", 400));
+    const song = await Song.findById(songId);
+    if (!song) return next(new ErrorHandler("Invalid song id", 400));
 
-    // const filteredPlaylistSongs = playlist.songs.filter(
-    //   (existingSongId: Types.ObjectId) => existingSongId.toString() !== songId
-    // );
+    const filteredPlaylistSongs = playlist?.songs?.filter(
+      (existingSongId) => String(existingSongId) !== songId
+    );
 
-    // playlist.songs = filteredPlaylistSongs;
-    // await playlist.save();
+    playlist.songs = filteredPlaylistSongs; // 👈 type cast
+    await playlist.save();
+  }
+);
+
+//get all playlist
+export const getAllPlaylist = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const playlists = await Playlist.find();
+    res.status(200).json({
+      success: true,
+      playlists: playlists ?? [],
+    });
+  }
+);
+
+//get all songs from a playlist
+export const getAllPlaylistSongs = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { playlistId } = req.params;
+    if (!playlistId) return next(new ErrorHandler("Invalid playlist id", 400));
+    const playlist = await Playlist.findById(playlistId).populate("songs");
+    res.status(200).json({
+      success: true,
+      playlistSongs: playlist?.songs,
+    });
   }
 );
 

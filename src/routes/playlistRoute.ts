@@ -4,6 +4,8 @@ import {
   addSongToPlaylist,
   createPlaylist,
   deletePlaylist,
+  getAllPlaylist,
+  getAllPlaylistSongs,
   removeFromPlaylist,
 } from "../controllers/playlistController";
 const router = express.Router();
@@ -12,8 +14,14 @@ const router = express.Router();
 router.post("/create", isAuthenticated, createPlaylist);
 //add to playlist
 router.patch("/:playlistId/add/:songId", isAuthenticated, addSongToPlaylist);
+
 //remove a song from playlist
-router.patch("/:playlistId/add/:songId", isAuthenticated, removeFromPlaylist);
+router.patch("/:playlistId/remove/:songId", isAuthenticated, removeFromPlaylist);
+
+//get all playlists
+router.get("/all", isAuthenticated, getAllPlaylist);
+//get all playlists
+router.get("/:playlistId/songs", isAuthenticated, getAllPlaylistSongs);
 //delete  playlist
 router.delete("/:playlistId/add/:songId", isAuthenticated, deletePlaylist);
 
