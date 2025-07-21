@@ -20,8 +20,8 @@ const songSchema = new Schema<Isong>(
       type: Number,
       min: 0,
     },
-    artist: {
-      type: String,
+    artists: {
+      type: [String],
     },
     year: {
       type: Number,

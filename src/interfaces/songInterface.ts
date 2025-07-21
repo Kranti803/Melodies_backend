@@ -13,7 +13,7 @@ export interface Isong {
   image: IImageUrl;
   songUrl: ISongUrl;
   duration: number;
-  artist: string;
+  artists: string[];
   year: number;
   album: string;
   playCount?: number;

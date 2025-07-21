@@ -3,6 +3,7 @@ import {
   getAllSongs,
   getRecentlyPlayed,
   getSingleSong,
+  getTrendingSongs,
   increaseSongPlayedCount,
   updateRecentlyPlayed,
   uploadSong,
@@ -25,17 +26,29 @@ router.post(
 );
 
 //get all songs
-router.get("/all", getAllSongs);
+router.get("/all", isAuthenticated, getAllSongs);
 
 //get a single song details
-router.get("/:songId/playing", getSingleSong);
+router.get("/:songId/playing", isAuthenticated, getSingleSong);
 
 //increase the song played count
-router.patch("/:songId/increase_play_count", increaseSongPlayedCount);
+router.patch(
+  "/:songId/increase_play_count",
+  isAuthenticated,
+  increaseSongPlayedCount
+);
 
 //update user's recently played songs
-router.put("/:songId/user/:userId/update_recentlyplayed", updateRecentlyPlayed);
+router.put(
+  "/:songId/user/:userId/update_recentlyplayed",
+  isAuthenticated,
+  updateRecentlyPlayed
+);
 
 //get user's recently played songs
 router.get("/recently_played_songs", isAuthenticated, getRecentlyPlayed);
+
+//get trending songs
+router.get("/recently_played_songs", isAuthenticated, getTrendingSongs);
+
 export default router;

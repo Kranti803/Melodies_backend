@@ -12,4 +12,5 @@ export interface IUser {
   provider: "local" | "google";
   googleId?: string;
   recentlyPlayedSongs?:Types.ObjectId[];
+  playlists?:Types.ObjectId[];
 }

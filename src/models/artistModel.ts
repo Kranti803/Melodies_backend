@@ -11,6 +11,10 @@ const artistSchema = new Schema<Iartist>({
     url: { type: String, required: true, unique: true },
     public_id: { type: String, required: true, unique: true },
   },
+  relatedSongs: {
+    type: [Types.ObjectId],
+    ref: "Song",
+  },
 });
 const Artist = model<Iartist>("artist", artistSchema);
 export default Artist;

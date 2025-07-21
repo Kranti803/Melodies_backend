@@ -5,6 +5,8 @@ import globalErrorHandler from "./middlewares/globalErrorHandler";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes";
 import songRoutes from "./routes/songRoutes";
+import artistRoute from "./routes/artistRoute";
+import playlistRoute from "./routes/playlistRoute";
 import googleAuthentication from "./auth/googleAuth";
 
 //allow access to .env file
@@ -35,6 +37,11 @@ app.use(cookieParser());
 app.use("/api/user", userRoutes);
 //songs route
 app.use("/api/song", songRoutes);
+//artists route
+app.use("/api/artist", artistRoute);
+//playlist route
+app.use("/api/playlist", playlistRoute);
+
 //google authentication
 googleAuthentication(app);
 //default route

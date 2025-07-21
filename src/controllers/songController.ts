@@ -28,14 +28,14 @@ export const uploadSong = catchAsyncError(
 
     const {
       duration,
-      common: { title, artist, album, year },
+      common: { title, artists, album, year },
     } = (req as any).audioMetaData;
     await Song.create({
       title,
       image: { public_id: cover_public_id, url: cover_secure_url },
       songUrl: { public_id: song_public_id, url: song_secure_url },
       duration,
-      artist,
+      artists,
       year,
       album,
     });
@@ -94,8 +94,6 @@ export const increaseSongPlayedCount = catchAsyncError(
     });
   }
 );
-
-//get Trending songs
 
 //update recently played song
 export const updateRecentlyPlayed = catchAsyncError(
@@ -161,16 +159,21 @@ export const getRecentlyPlayed = catchAsyncError(
   }
 );
 
-//get all artists
+//get Trending songs
+
+export const getTrendingSongs = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const trendingSongs = await Song.find().sort({ playCount: -1 }).limit(5); //sorted in desc order;
+    res.status(200).json({
+      success: true,
+      trendingSongs: trendingSongs ?? [],
+    });
+  }
+);
 
 
-//add a playlist
 
-//delete playlist
 
-//add  song  to playlist
-
-//delete song from playlist
 
 //add song to liked
 

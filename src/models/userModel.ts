@@ -36,6 +36,10 @@ const userSchema = new Schema<IUser>(
       ref: "Song",
       default: [],
     },
+    playlists:{
+      type:[Types.ObjectId],
+      ref:'Playlist'
+    }
   },
   { timestamps: true }
 );
