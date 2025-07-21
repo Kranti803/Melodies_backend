@@ -6,6 +6,7 @@ import { uploadCoverImageToCloudinary } from "./../utils/uploadCoverImageToCloud
 import Song from "../models/songModel";
 import User from "../models/userModel";
 import { IUser } from "../interfaces/userInterface";
+import { Types } from "mongoose";
 
 //upload/create a new song
 export const uploadSong = catchAsyncError(
@@ -160,7 +161,6 @@ export const getRecentlyPlayed = catchAsyncError(
 );
 
 //get Trending songs
-
 export const getTrendingSongs = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const trendingSongs = await Song.find().sort({ playCount: -1 }).limit(5); //sorted in desc order;
@@ -171,10 +171,55 @@ export const getTrendingSongs = catchAsyncError(
   }
 );
 
+//add and remove  liked song
+export const addAndRemoveFromLiked = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { songId } = req.params;
+    if (!songId) return next(new ErrorHandler("Invalid song id", 400));
 
+    const song = await Song.findById(songId);
+    if (!song) return next(new ErrorHandler("Song does not exist", 404));
 
+    const user = (req as any)?.user;
+    const alreadyAdded = user.likedSongs.some(
+      (songIdObject: Types.ObjectId) => songIdObject.toString() === songId
+    );
 
+    if (alreadyAdded) {
+      user.likedSongs = user.likedSongs.filter(
+        (songIdObject: Types.ObjectId) => songIdObject.toString() !== songId
+      );
+      await user.save();
+      res.status(200).json({
+        success: true,
+        message: "Song removed from liked songs",
+      });
+      return;
+    }
 
-//add song to liked
+    user.likedSongs.push(song._id);
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "Song added to liked songs",
+    });
+  }
+);
 
-//remove songs from liked
+//get all liked songs
+export const getAllLikedSongs = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const userId = (req as any).user._id;
+
+    const user = await User.findById(userId).populate("likedSongs");
+
+    if (!user) {
+      return next(new ErrorHandler("User not found", 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      likedSongs: user.likedSongs,
+    });
+  }
+);

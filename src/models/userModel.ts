@@ -36,10 +36,14 @@ const userSchema = new Schema<IUser>(
       ref: "Song",
       default: [],
     },
-    playlists:{
-      type:[Types.ObjectId],
-      ref:'Playlist'
-    }
+    playlists: {
+      type: [Types.ObjectId],
+      ref: "Playlist",
+    },
+    likedSongs: {
+      type: [Types.ObjectId],
+      ref: "Song",
+    },
   },
   { timestamps: true }
 );

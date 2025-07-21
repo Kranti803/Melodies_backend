@@ -11,6 +11,7 @@ export interface IUser {
   resetPasswordTokenExpire?: Date;
   provider: "local" | "google";
   googleId?: string;
-  recentlyPlayedSongs?:Types.ObjectId[];
-  playlists?:Types.ObjectId[];
+  recentlyPlayedSongs?: Types.ObjectId[];
+  playlists?: Types.ObjectId[];
+  likedSongs: Types.ObjectId[];
 }

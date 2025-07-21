@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addAndRemoveFromLiked,
   getAllSongs,
   getRecentlyPlayed,
   getSingleSong,
@@ -50,5 +51,9 @@ router.get("/recently_played_songs", isAuthenticated, getRecentlyPlayed);
 
 //get trending songs
 router.get("/recently_played_songs", isAuthenticated, getTrendingSongs);
+
+//add and remove liked songs
+router.patch("/liked/:songId/add_remove", isAuthenticated, addAndRemoveFromLiked);
+
 
 export default router;
