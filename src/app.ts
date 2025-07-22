@@ -8,6 +8,7 @@ import songRoutes from "./routes/songRoutes";
 import artistRoute from "./routes/artistRoute";
 import playlistRoute from "./routes/playlistRoute";
 import adminRoute from "./routes/adminRoute";
+import statsRoute from "./routes/statsRoute";
 import googleAuthentication from "./auth/googleAuth";
 
 //allow access to .env file
@@ -23,10 +24,8 @@ const app: Application = express();
 app.use(compression());
 //parse incoming json request
 app.use(express.json());
-
 //parse URL-encoded data (from HTML forms) into req.body(for multer)
 app.use(express.urlencoded({ extended: true }));
-
 //parse cookies from the Cookie header and populate req.cookies
 app.use(cookieParser());
 
@@ -44,14 +43,16 @@ app.use("/api/artist", artistRoute);
 app.use("/api/playlist", playlistRoute);
 //playlist route
 app.use("/api/admin", adminRoute);
+//analytics route
+app.use("/api/stats", statsRoute);
 
 //google authentication
 googleAuthentication(app);
+
 //default route
 app.get("/", (_, res: Response) => {
   res.send("Welcome to the server");
 });
-
 //route not found
 app.use((_, res: Response) => {
   res.status(404).json({ message: "Route not found" });
