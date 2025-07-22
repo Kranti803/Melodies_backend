@@ -1,7 +1,9 @@
 import express from "express";
 import {
   addAndRemoveFromLiked,
+  getAllLikedSongs,
   getAllSongs,
+  getArtistSongs,
   getRecentlyPlayed,
   getSingleSong,
   getTrendingSongs,
@@ -53,7 +55,16 @@ router.get("/recently_played_songs", isAuthenticated, getRecentlyPlayed);
 router.get("/recently_played_songs", isAuthenticated, getTrendingSongs);
 
 //add and remove liked songs
-router.patch("/liked/:songId/add_remove", isAuthenticated, addAndRemoveFromLiked);
+router.patch(
+  "/liked/:songId/add_remove",
+  isAuthenticated,
+  addAndRemoveFromLiked
+);
 
+//add and remove liked songs
+router.patch("/liked", isAuthenticated, getAllLikedSongs);
+
+//get all songs of a artist
+router.get("/artist/:artistId/all", isAuthenticated, isAdmin, getArtistSongs);
 
 export default router;

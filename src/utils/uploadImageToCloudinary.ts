@@ -1,8 +1,8 @@
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
-import { bufferToStream } from "../utils/bufferToStream";
+import { bufferToStream } from "./bufferToStream";
 
 // Uploads a cover image buffer to Cloudinary under the 'covers' folder
-export const uploadCoverImageToCloudinary = async (imageBuffer: Buffer) => {
+export const uploadImageToCloudinary = async (imageBuffer: Buffer,folderName:string) => {
   const imageStream = bufferToStream(imageBuffer);
 
   const uploadResult = await new Promise<UploadApiResponse>(
@@ -10,7 +10,7 @@ export const uploadCoverImageToCloudinary = async (imageBuffer: Buffer) => {
       const cloudinaryStream = cloudinary.uploader.upload_stream(
         {
           resource_type: "image",
-          folder: "covers",
+          folder:folderName,
         },
         (error, result) => {
           if (error || !result)

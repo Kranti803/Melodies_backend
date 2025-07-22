@@ -7,5 +7,5 @@ interface IImageUrl {
 export interface Iartist {
   name: string;
   image: IImageUrl;
-  relatedSongs: Types.ObjectId[];
+  relatedSongs?: Types.ObjectId[];
 }
