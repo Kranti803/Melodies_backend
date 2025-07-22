@@ -62,7 +62,7 @@ export const removeFromPlaylist = catchAsyncError(
       (existingSongId) => String(existingSongId) !== songId
     );
 
-    playlist.songs = filteredPlaylistSongs; // 👈 type cast
+    playlist.songs = filteredPlaylistSongs;
     await playlist.save();
   }
 );

@@ -1,54 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import catchAsyncError from "../utils/asyncHandler";
 import ErrorHandler from "../utils/errorHandler";
-import { uploadSongToCloudinary } from "./../utils/uploadSongToCloudinary";
-import { uploadImageToCloudinary } from "../utils/uploadImageToCloudinary";
 import Song from "../models/songModel";
 import User from "../models/userModel";
 import { IUser } from "../interfaces/userInterface";
 import { Types } from "mongoose";
-import Artist from "../models/artistModel";
-
-//upload/create a new song
-export const uploadSong = catchAsyncError(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const file = req.file;
-    if (!file) return next(new ErrorHandler("File not found", 400));
-
-    // uploading the song to cloudinary
-    const uploadedSongResult = await uploadSongToCloudinary(file.buffer);
-
-    // uploading the song cover to cloudinary
-    const uploadedSongCoverResult = await uploadImageToCloudinary(
-      (req as any)?.audioMetaData?.common?.picture?.[0]?.data,
-      "covers"
-    );
-
-    const { public_id: song_public_id, secure_url: song_secure_url } =
-      uploadedSongResult;
-    const { public_id: cover_public_id, secure_url: cover_secure_url } =
-      uploadedSongCoverResult;
-
-    const {
-      duration,
-      common: { title, artists, album, year },
-    } = (req as any).audioMetaData;
-    await Song.create({
-      title,
-      image: { public_id: cover_public_id, url: cover_secure_url },
-      songUrl: { public_id: song_public_id, url: song_secure_url },
-      duration,
-      artists,
-      year,
-      album,
-    });
-
-    res.status(200).json({
-      success: true,
-      message: "Song uploaded successfully",
-    });
-  }
-);
 
 //get all songs
 export const getAllSongs = catchAsyncError(
@@ -227,20 +183,4 @@ export const getAllLikedSongs = catchAsyncError(
 );
 
 //get all songs of a particular artist
-export const getArtistSongs = catchAsyncError(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { artistId } = req.params;
-    if (!Types.ObjectId.isValid(artistId))
-      return next(new ErrorHandler("Invalid artist Id", 400));
 
-    const artist = await Artist.findById(artistId);
-    if (!artist) return next(new ErrorHandler("Artist not found", 404));
-    const songs = await Song.find({
-      artists: { $regex: new RegExp(`^${artist.name}$`, "i") },
-    });
-    res.status(200).json({
-      success: true,
-      songs,
-    });
-  }
-);

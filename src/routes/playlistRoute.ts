@@ -15,7 +15,11 @@ router.post("/create", isAuthenticated, createPlaylist);
 //add to playlist
 router.patch("/:playlistId/add/:songId", isAuthenticated, addSongToPlaylist);
 //remove a song from playlist
-router.patch("/:playlistId/remove/:songId", isAuthenticated, removeFromPlaylist);
+router.patch(
+  "/:playlistId/remove/:songId",
+  isAuthenticated,
+  removeFromPlaylist
+);
 //get all playlists
 router.get("/all", isAuthenticated, getAllPlaylist);
 //get all songs of a playlists

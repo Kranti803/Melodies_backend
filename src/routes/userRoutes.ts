@@ -1,4 +1,4 @@
-import express,{Request,Response} from "express";
+import express from "express";
 import {
   forgotPassword,
   getUserProfile,
@@ -9,9 +9,6 @@ import {
   verifyUser,
 } from "../controllers/userController";
 import isAuthenticated from "../middlewares/isAuthenticated";
-import isAdmin from "../middlewares/isAdmin";
-import extractAudioMetaData from "../middlewares/extractAudioMetaData";
-import upload from "../middlewares/audioUpload";
 
 const router = express.Router();
 
@@ -22,7 +19,7 @@ router.post("/register", registerUser);
 router.get("/email_verify/:userId/:token", verifyUser);
 
 //get profile
-router.get("/profile", isAuthenticated, isAdmin, getUserProfile);
+router.get("/profile", isAuthenticated, getUserProfile);
 
 //login user
 router.post("/login", loginUser);

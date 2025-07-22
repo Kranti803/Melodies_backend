@@ -3,30 +3,15 @@ import {
   addAndRemoveFromLiked,
   getAllLikedSongs,
   getAllSongs,
-  getArtistSongs,
   getRecentlyPlayed,
   getSingleSong,
   getTrendingSongs,
   increaseSongPlayedCount,
   updateRecentlyPlayed,
-  uploadSong,
 } from "../controllers/songController";
 import isAuthenticated from "./../middlewares/isAuthenticated";
-import isAdmin from "./../middlewares/isAdmin";
-import extractAudioMetaData from "./../middlewares/extractAudioMetaData";
-import upload from "../middlewares/audioUpload";
 
 const router = express.Router();
-
-//upload/create new song
-router.post(
-  "/upload_new_song",
-  isAuthenticated,
-  isAdmin,
-  upload.single("audio"),
-  extractAudioMetaData,
-  uploadSong
-);
 
 //get all songs
 router.get("/all", isAuthenticated, getAllSongs);
@@ -63,8 +48,5 @@ router.patch(
 
 //add and remove liked songs
 router.patch("/liked", isAuthenticated, getAllLikedSongs);
-
-//get all songs of a artist
-router.get("/artist/:artistId/all", isAuthenticated, isAdmin, getArtistSongs);
 
 export default router;

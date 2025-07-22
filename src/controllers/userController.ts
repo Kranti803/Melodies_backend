@@ -1,4 +1,3 @@
-// controllers/user.controller.ts
 import { Request, Response, NextFunction } from "express";
 import catchAsyncError from "../utils/asyncHandler";
 import ErrorHandler from "../utils/errorHandler";

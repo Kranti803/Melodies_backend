@@ -7,6 +7,7 @@ import userRoutes from "./routes/userRoutes";
 import songRoutes from "./routes/songRoutes";
 import artistRoute from "./routes/artistRoute";
 import playlistRoute from "./routes/playlistRoute";
+import adminRoute from "./routes/adminRoute";
 import googleAuthentication from "./auth/googleAuth";
 
 //allow access to .env file
@@ -41,6 +42,8 @@ app.use("/api/song", songRoutes);
 app.use("/api/artist", artistRoute);
 //playlist route
 app.use("/api/playlist", playlistRoute);
+//playlist route
+app.use("/api/admin", adminRoute);
 
 //google authentication
 googleAuthentication(app);
