@@ -9,29 +9,46 @@ import {
   verifyUser,
 } from "../controllers/userController";
 import isAuthenticated from "../middlewares/isAuthenticated";
+import { validate } from "../middlewares/validate";
+import {
+  forgotPasswordSchema,
+  loginUserSchema,
+  registerUserSchema,
+  resetPasswordBodySchema,
+  resetPasswordParamsSchema,
+  verifyUserSchema,
+} from "../validations/userValidaton";
 
 const router = express.Router();
 
 //register user
-router.post("/register", registerUser);
+router.post("/register", validate(registerUserSchema), registerUser);
 
 //verify user email
-router.get("/email_verify/:userId/:token", verifyUser);
+router.get(
+  "/email_verify/:userId/:token",
+  validate(verifyUserSchema, "params"),
+  verifyUser
+);
 
 //get profile
 router.get("/profile", isAuthenticated, getUserProfile);
 
 //login user
-router.post("/login", loginUser);
+router.post("/login", validate(loginUserSchema), loginUser);
 
 //logout user
 router.get("/logout", logoutUser);
 
 //forgot password
-router.get("/forgot_password", forgotPassword);
+router.get("/forgot_password", validate(forgotPasswordSchema), forgotPassword);
 
 //reset password
-router.post("/reset_password/:resetToken", resetPassword);
-
+router.post(
+  "/reset_password/:resetToken",
+  validate(resetPasswordParamsSchema, "params"),
+  validate(resetPasswordBodySchema),
+  resetPassword
+);
 
 export default router;

@@ -13,9 +13,6 @@ export const registerUser = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, email, password } = req.body;
 
-    if (!name || !email || !password)
-      return next(new ErrorHandler("All fields are required", 400));
-
     let existingUser = await User.findOne({ email });
 
     if (existingUser) return next(new ErrorHandler("User already exits", 409));
@@ -29,7 +26,7 @@ export const registerUser = catchAsyncError(
     });
 
     //sending email verification email........
-    //generation token first
+    //generating token first
     const token = crypto.randomBytes(32).toString("hex");
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
@@ -57,8 +54,6 @@ export const registerUser = catchAsyncError(
 export const verifyUser = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { userId, token } = req.params;
-    if (!token || !userId)
-      return next(new ErrorHandler("Link is invalid", 400));
 
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
     const dbToken = await emailVerification.findOne({
@@ -80,9 +75,6 @@ export const verifyUser = catchAsyncError(
 export const loginUser = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
-
-    if (!email || !password)
-      return next(new ErrorHandler("All fields are required", 400));
 
     const user = await User.findOne({ email }).select("+password");
     if (!user) return next(new ErrorHandler("Invalid credentials", 401));
@@ -133,8 +125,7 @@ export const getUserProfile = catchAsyncError(
 export const forgotPassword = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email } = req.body;
-    if (!email)
-      return next(new ErrorHandler("Please verify your email first", 403));
+
     let user = await User.findOne({ email });
     if (!user) return next(new ErrorHandler("User doesnot exits", 400));
     if (user.provider === "google")
@@ -151,41 +142,12 @@ export const forgotPassword = catchAsyncError(
     user.resetPasswordTokenExpire = new Date(Date.now() + 1000 * 60 * 5);
     await user.save();
 
-    // `<h3><a href=http://localhost:4500/api/user/reset_password/${resetToken}">Click here to reset your password</a></h3>`
+    //
     sendEmail(
       email,
       "Password reset",
       "Reset your password",
-      `
-       <html>
-    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-      <h2>Password Reset Request</h2>
-      <p>We received a request to reset your password. Click the link below to proceed:</p>
-      <p>
-        <a 
-          href="http://localhost:4500/api/user/reset_password/${resetToken}" 
-          style="
-            display: inline-block; 
-            padding: 10px 20px; 
-            background-color: #007bff; 
-            color: white; 
-            text-decoration: none; 
-            border-radius: 5px;
-          "
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Reset Your Password
-        </a>
-      </p>
-      <p>If you did not request a password reset, you can safely ignore this email.</p>
-      <hr />
-      <p style="font-size: 0.9em; color: #555;">
-        This link will expire in 1 minute for your security.
-      </p>
-    </body>
-  </html>
-`
+      `<h3><a href=http://localhost:4500/api/user/reset_password/${resetToken}">Click here to reset your password</a></h3>`
     );
     res.status(200).json({
       success: true,
@@ -199,8 +161,6 @@ export const resetPassword = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { resetToken } = req.params;
     const newPassword = req.body?.newPassword;
-    if (!newPassword)
-      return next(new ErrorHandler("Please enter a new password", 400));
 
     const hashedToken = crypto
       .createHash("sha256")
