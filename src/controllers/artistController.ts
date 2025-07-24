@@ -20,8 +20,6 @@ export const getAllArtists = catchAsyncError(
 export const getArtistSongs = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { artistId } = req.params;
-    if (!Types.ObjectId.isValid(artistId))
-      return next(new ErrorHandler("Invalid artist Id", 400));
 
     const artist = await Artist.findById(artistId);
     if (!artist) return next(new ErrorHandler("Artist not found", 404));
@@ -34,4 +32,3 @@ export const getArtistSongs = catchAsyncError(
     });
   }
 );
-

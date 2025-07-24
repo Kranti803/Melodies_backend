@@ -21,7 +21,6 @@ export const getAllSongs = catchAsyncError(
 export const getSingleSong = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { songId } = req.params;
-    if (!songId) return next(new ErrorHandler("Invalid songId", 404));
 
     const song = await Song.findById(songId);
     if (!song) return next(new ErrorHandler("This song doesnot exist", 404));
@@ -37,8 +36,6 @@ export const getSingleSong = catchAsyncError(
 export const increaseSongPlayedCount = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { songId } = req.params;
-
-    if (!songId) return next(new ErrorHandler("Invalid songId", 400));
 
     await Song.findByIdAndUpdate(
       songId,
@@ -58,9 +55,6 @@ export const increaseSongPlayedCount = catchAsyncError(
 export const updateRecentlyPlayed = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { songId, userId } = req.params;
-
-    if (!songId || !userId)
-      return next(new ErrorHandler("Invalid songId or userId", 400));
 
     const user = await User.findById(userId);
     if (!user) return next(new ErrorHandler("Invalid userId", 400));
@@ -133,7 +127,6 @@ export const getTrendingSongs = catchAsyncError(
 export const addAndRemoveFromLiked = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { songId } = req.params;
-    if (!songId) return next(new ErrorHandler("Invalid song id", 400));
 
     const song = await Song.findById(songId);
     if (!song) return next(new ErrorHandler("Song does not exist", 404));
@@ -181,6 +174,4 @@ export const getAllLikedSongs = catchAsyncError(
     });
   }
 );
-
-//get all songs of a particular artist
 

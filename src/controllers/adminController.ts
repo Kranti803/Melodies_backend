@@ -54,8 +54,6 @@ export const uploadSong = catchAsyncError(
 export const deleteSong = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { songId } = req.params;
-    if (!Types.ObjectId.isValid(songId))
-      return next(new ErrorHandler("Invalid song id", 400));
 
     const song = await Song.findById(songId);
     if (!song) return next(new ErrorHandler("Song doesnot exists", 404));
@@ -86,8 +84,6 @@ export const deleteSong = catchAsyncError(
 export const deleteUser = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.params;
-    if (!Types.ObjectId.isValid(userId))
-      return next(new ErrorHandler("Invalid user id", 400));
 
     const user = await User.findById(userId);
     if (!user) return next(new ErrorHandler("User doesnot exits", 404));
@@ -106,8 +102,7 @@ export const addArtist = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;
     const file = req.file;
-    if (!name || !file)
-      return next(new ErrorHandler("All filds are required", 404));
+    if (!file) return next(new ErrorHandler("All filds are required", 404));
 
     //uploading artist image
     const uploadedResult = await uploadImageToCloudinary(
@@ -116,7 +111,7 @@ export const addArtist = catchAsyncError(
     );
     const { public_id, secure_url } = uploadedResult;
 
-     await Artist.create({
+    await Artist.create({
       name,
       image: { public_id, url: secure_url },
     });
@@ -130,8 +125,6 @@ export const addArtist = catchAsyncError(
 export const deleteArtist = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { artistId } = req.params;
-    if (!Types.ObjectId.isValid(artistId))
-      return next(new ErrorHandler("Invalid artist Id", 400));
 
     const artist = await Artist.findByIdAndDelete(artistId);
     if (!artist) return next(new ErrorHandler("Artist not found", 404));

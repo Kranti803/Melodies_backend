@@ -10,6 +10,13 @@ import {
   updateRecentlyPlayed,
 } from "../controllers/songController";
 import isAuthenticated from "./../middlewares/isAuthenticated";
+import { validate } from "../middlewares/validate";
+import {
+  addAndRemoveFromLikedSchema,
+  getSingleSongSchema,
+  increasePlayCountSchema,
+  updateRecentlyPlayedSchema,
+} from "../validations/songValidation";
 
 const router = express.Router();
 
@@ -17,12 +24,18 @@ const router = express.Router();
 router.get("/all", isAuthenticated, getAllSongs);
 
 //get a single song details
-router.get("/:songId/playing", isAuthenticated, getSingleSong);
+router.get(
+  "/:songId/playing",
+  isAuthenticated,
+  validate(getSingleSongSchema, "params"),
+  getSingleSong
+);
 
 //increase the song played count
 router.patch(
   "/:songId/increase_play_count",
   isAuthenticated,
+  validate(increasePlayCountSchema, "params"),
   increaseSongPlayedCount
 );
 
@@ -30,6 +43,7 @@ router.patch(
 router.put(
   "/:songId/user/:userId/update_recentlyplayed",
   isAuthenticated,
+  validate(updateRecentlyPlayedSchema, "params"),
   updateRecentlyPlayed
 );
 
@@ -43,10 +57,11 @@ router.get("/recently_played_songs", isAuthenticated, getTrendingSongs);
 router.patch(
   "/liked/:songId/add_remove",
   isAuthenticated,
+  validate(addAndRemoveFromLikedSchema, "params"),
   addAndRemoveFromLiked
 );
 
-//add and remove liked songs
+//get all liked songs
 router.patch("/liked", isAuthenticated, getAllLikedSongs);
 
 export default router;

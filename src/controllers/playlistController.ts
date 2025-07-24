@@ -4,16 +4,16 @@ import Playlist from "../models/playlistModel";
 import ErrorHandler from "../utils/errorHandler";
 import Song from "../models/songModel";
 import { Types } from "mongoose";
+import User from "../models/userModel";
 
 //create a playlist
 export const createPlaylist = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { playlistName, description } = req.body;
 
-    if (!playlistName || !description)
-      return next(new ErrorHandler("All fields are required", 400));
-
-    await Playlist.create({ playlistName, description });
+    const playlist = await Playlist.create({ playlistName, description });
+    const user = await User.findById((req as any).user._id);
+    user?.playlists?.push(playlist._id);
     res.status(200).json({
       success: true,
       mesage: "Playlist created successfully",
@@ -25,9 +25,8 @@ export const createPlaylist = catchAsyncError(
 export const addSongToPlaylist = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { playlistId, songId } = req.params;
-    if (!playlistId || !songId)
-      return next(new ErrorHandler("Invalid playlist id or song id", 404));
-    let playlist = await Playlist.findById(playlistId).populate("songs");
+
+    let playlist = await Playlist.findById(playlistId);
     if (!playlist) return next(new ErrorHandler("Invalid playlist id", 400));
     const song = await Song.findById(songId);
     if (!song) return next(new ErrorHandler("Invalid song id", 400));
@@ -40,6 +39,7 @@ export const addSongToPlaylist = catchAsyncError(
 
     playlist?.songs?.push(new Types.ObjectId(songId));
     await playlist.save();
+
     res.status(200).json({
       success: true,
       message: "Song added to playlist",
@@ -51,8 +51,7 @@ export const addSongToPlaylist = catchAsyncError(
 export const removeFromPlaylist = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { playlistId, songId } = req.params;
-    if (!playlistId || !songId)
-      return next(new ErrorHandler("Invalid playlist id or song id", 400));
+
     let playlist = await Playlist.findById(playlistId);
     if (!playlist) return next(new ErrorHandler("Invalid playlist id", 400));
     const song = await Song.findById(songId);
@@ -82,7 +81,6 @@ export const getAllPlaylist = catchAsyncError(
 export const getAllPlaylistSongs = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { playlistId } = req.params;
-    if (!playlistId) return next(new ErrorHandler("Invalid playlist id", 400));
     const playlist = await Playlist.findById(playlistId).populate("songs");
     res.status(200).json({
       success: true,
@@ -95,7 +93,6 @@ export const getAllPlaylistSongs = catchAsyncError(
 export const deletePlaylist = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { playlistId } = req.params;
-    if (!playlistId) return next(new ErrorHandler("Invalid playlist id", 404));
     const deletedPlaylist = await Playlist.findOneAndDelete({
       _id: playlistId,
     });
