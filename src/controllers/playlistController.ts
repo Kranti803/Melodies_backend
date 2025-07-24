@@ -14,6 +14,7 @@ export const createPlaylist = catchAsyncError(
     const playlist = await Playlist.create({ playlistName, description });
     const user = await User.findById((req as any).user._id);
     user?.playlists?.push(playlist._id);
+    await user?.save();
     res.status(200).json({
       success: true,
       mesage: "Playlist created successfully",

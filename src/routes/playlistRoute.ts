@@ -50,7 +50,7 @@ router.get(
 );
 //delete  playlist
 router.delete(
-  "/:playlistId/add/:songId",
+  "/:playlistId/delete",
   isAuthenticated,
   validate(deletePlaylistSchema, "params"),
   deletePlaylist
