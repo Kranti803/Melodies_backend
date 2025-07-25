@@ -1,5 +1,6 @@
 import express, { Application, Response } from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import compression from "compression";
 import globalErrorHandler from "./middlewares/globalErrorHandler";
 import cookieParser from "cookie-parser";
@@ -28,6 +29,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //parse cookies from the Cookie header and populate req.cookies
 app.use(cookieParser());
+//cors(connecting the backend with the frontend)
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true, //we have to enable this if we ae using cookies or authorization headers
+  })
+);
 
 //-----------
 //Routes
