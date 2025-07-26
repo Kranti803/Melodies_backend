@@ -12,7 +12,6 @@ import sendEmail from "../utils/sendEmail";
 export const registerUser = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, email, password } = req.body;
-    console.log(name,email,password)
 
     let existingUser = await User.findOne({ email });
 
