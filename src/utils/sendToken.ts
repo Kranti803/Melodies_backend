@@ -14,8 +14,9 @@ const sendToken = (res: Response, user: IUser, message: string) => {
     .cookie("jwt_token", token, {
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
       httpOnly: true,
-      // secure:true, //uncomment when backend and frontend use HTTPS
+      secure:true, //uncomment when backend and frontend use HTTPS
       sameSite: "none",
+      // secure: false,
     })
     .json({
       success: true,

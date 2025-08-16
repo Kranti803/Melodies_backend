@@ -99,9 +99,8 @@ export const logoutUser = catchAsyncError(
     res
       .status(200)
       .clearCookie("jwt_token", {
-        expires: new Date(Date.now()),
         httpOnly: true,
-        // secure:true, //uncomment when backend and frontend use HTTPS
+        secure:true, //uncomment when backend and frontend use HTTPS
         sameSite: "none",
       })
       .json({

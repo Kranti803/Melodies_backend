@@ -38,7 +38,7 @@ router.get("/profile", isAuthenticated, getUserProfile);
 router.post("/login", validate(loginUserSchema), loginUser);
 
 //logout user
-router.get("/logout", logoutUser);
+router.post("/logout", logoutUser);
 
 //forgot password
 router.get("/forgot_password", validate(forgotPasswordSchema), forgotPassword);
