@@ -50,7 +50,7 @@ export const registerUser = catchAsyncError(
   }
 );
 
-//send email
+//verify user email
 export const verifyUser = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { userId, token } = req.params;
@@ -100,7 +100,7 @@ export const logoutUser = catchAsyncError(
       .status(200)
       .clearCookie("jwt_token", {
         httpOnly: true,
-        secure:true, //uncomment when backend and frontend use HTTPS
+        secure: true, //uncomment when backend and frontend use HTTPS
         sameSite: "none",
       })
       .json({
@@ -184,6 +184,36 @@ export const resetPassword = catchAsyncError(
     res.status(200).json({
       success: true,
       message: "Password has been changed successfully",
+    });
+  }
+);
+
+//resend email verification link
+export const resendEmailVerificationLink = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+    // const user = await User.find({ email });//findOne returns an array even if a single user exits so checking !user wont work as expected
+    const user = await User.findOne({ email });
+    if (!user) return next(new ErrorHandler("User doesnot exists", 404));
+
+    //generating token first
+    const token = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    //saving hashed token in db
+    await emailVerification.create({
+      token: hashedToken,
+      userId: user._id,
+    });
+    await sendEmail(
+      email,
+      " Melodies Email Verification",
+      "Please verify your email to continue !",
+      `<h3><a href="http://localhost:4500/api/user/email_verify/${user._id}/${token}">Click here to verify your email</a></h3>`
+    );
+    res.status(200).json({
+      success: true,
+      message: "Email sent for verification",
     });
   }
 );

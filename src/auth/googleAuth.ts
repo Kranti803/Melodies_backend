@@ -72,10 +72,10 @@ const googleAuthentication = (app: express.Application) => {
           res.status(200).cookie("jwt_token", token, {
             expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
             httpOnly: true,
-            // secure:true, //uncomment when backend and frontend use HTTPS
+            secure:true, //uncomment when backend and frontend use HTTPS
             sameSite: "none",
           });
-          res.redirect(`http://localhost:4500`);
+          res.redirect(`http://localhost:5173`);
         }
       )(req, res, next);
     }

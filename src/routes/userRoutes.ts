@@ -5,6 +5,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  resendEmailVerificationLink,
   resetPassword,
   verifyUser,
 } from "../controllers/userController";
@@ -14,6 +15,7 @@ import {
   forgotPasswordSchema,
   loginUserSchema,
   registerUserSchema,
+  resendEmailBodySchema,
   resetPasswordBodySchema,
   resetPasswordParamsSchema,
   verifyUserSchema,
@@ -29,6 +31,12 @@ router.get(
   "/email_verify/:userId/:token",
   validate(verifyUserSchema, "params"),
   verifyUser
+);
+//resend user email verification link
+router.post(
+  "/resend_email_verification_link",
+  validate(resendEmailBodySchema, "body"),
+  resendEmailVerificationLink
 );
 
 //get profile

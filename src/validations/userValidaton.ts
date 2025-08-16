@@ -42,3 +42,6 @@ export const resetPasswordBodySchema = z.object({
     .min(8, "New password must be at least 8 characters")
     .trim(),
 });
+export const resendEmailBodySchema = z.object({
+  email: z.string().email().trim(),
+});
