@@ -30,14 +30,16 @@ export const uploadSong = catchAsyncError(
       uploadedSongCoverResult;
 
     const {
-      duration,
+      format,
       common: { title, artists, album, year },
     } = (req as any).audioMetaData;
+
+    
     await Song.create({
       title,
       image: { public_id: cover_public_id, url: cover_secure_url },
       songUrl: { public_id: song_public_id, url: song_secure_url },
-      duration,
+      duration:format.duration,
       artists,
       year,
       album,
