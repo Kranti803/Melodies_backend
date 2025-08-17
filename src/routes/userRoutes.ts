@@ -49,7 +49,7 @@ router.post("/login", validate(loginUserSchema), loginUser);
 router.post("/logout", logoutUser);
 
 //forgot password
-router.get("/forgot_password", validate(forgotPasswordSchema), forgotPassword);
+router.post("/forgot_password", validate(forgotPasswordSchema), forgotPassword);
 
 //reset password
 router.post(

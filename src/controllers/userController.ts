@@ -146,7 +146,7 @@ export const forgotPassword = catchAsyncError(
       email,
       "Password reset",
       "Reset your password",
-      `<h3><a href=http://localhost:4500/api/user/reset_password/${resetToken}">Click here to reset your password</a></h3>`
+      `<h3><a href=http://localhost:5173/resetpassword/${resetToken}>Click here to reset your password</a></h3>`
     );
     res.status(200).json({
       success: true,
@@ -171,7 +171,7 @@ export const resetPassword = catchAsyncError(
       resetPasswordTokenExpire: {
         $gt: new Date(),
       },
-    }).select("+password"); //donot forget to include password
+    }).select("+password"); //necessary to include password
 
     if (!user)
       return next(new ErrorHandler("Invalid  or expired reset Link", 400));

@@ -48,6 +48,7 @@ const googleAuthentication = (app: express.Application) => {
     passport.authenticate("google", {
       scope: ["profile", "email"],
       session: false,
+      prompt: " consent select_account",
     })
   );
 
