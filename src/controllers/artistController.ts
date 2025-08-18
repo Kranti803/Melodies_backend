@@ -24,7 +24,7 @@ export const getArtistSongs = catchAsyncError(
     const artist = await Artist.findById(artistId);
     if (!artist) return next(new ErrorHandler("Artist not found", 404));
     const songs = await Song.find({
-      artists: { $regex: new RegExp(`^${artist.name}$`, "i") },
+      artists: { $regex: new RegExp(artist.name, "i") },
     });
     res.status(200).json({
       success: true,

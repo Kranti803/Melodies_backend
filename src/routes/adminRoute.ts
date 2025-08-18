@@ -31,7 +31,7 @@ router.post(
 
 //delete songs
 router.delete(
-  "/:songId/delete",
+  "/song/:songId/delete",
   isAuthenticated,
   isAdmin,
   validate(deleteSongSchema, "params"),
@@ -40,7 +40,7 @@ router.delete(
 
 //delete user
 router.delete(
-  "/:userId/delete",
+  "/user/:userId/delete",
   isAuthenticated,
   isAdmin,
   validate(deleteUserSchema, "params"),
@@ -48,7 +48,7 @@ router.delete(
 );
 //add artist
 router.post(
-  "/add",
+  "/artist/add",
   isAuthenticated,
   isAdmin,
   upload.single("artist"),
@@ -57,7 +57,7 @@ router.post(
 );
 //delete artist
 router.delete(
-  "/:artistId/delete",
+  "/artist/:artistId/delete",
   isAuthenticated,
   isAdmin,
   validate(deleteArtistSchema, "params"),
