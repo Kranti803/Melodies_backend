@@ -34,6 +34,10 @@ const songSchema = new Schema<Isong>(
       default: 0,
       min: 0,
     },
+    trending: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

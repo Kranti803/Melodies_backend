@@ -17,4 +17,5 @@ export interface Isong {
   year: number;
   album: string;
   playCount?: number;
+  trending:boolean
 }
