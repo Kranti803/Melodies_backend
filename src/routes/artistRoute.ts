@@ -7,7 +7,7 @@ import { getArtistSongsSchema } from "./../validations/artistValidation";
 const router = express.Router();
 
 //get all artist
-router.get("/all", isAuthenticated, isAdmin, getAllArtists);
+router.get("/all", isAuthenticated, getAllArtists);
 
 //get all songs of a artist
 router.get(
