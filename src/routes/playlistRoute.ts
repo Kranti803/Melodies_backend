@@ -6,6 +6,7 @@ import {
   deletePlaylist,
   getAllPlaylist,
   getAllPlaylistSongs,
+  getAllPlaylistUser,
   removeFromPlaylist,
 } from "../controllers/playlistController";
 import { validate } from "../middlewares/validate";
@@ -14,8 +15,10 @@ import {
   createPlaylistSchem,
   deletePlaylistSchema,
   getAllPlaylistSongsSchma,
+  getUserPlaylistSchema,
   removeFromPlaylistSchema,
 } from "../validations/playlistValidation";
+import { objectIdSchema } from "../validations/mongoObjectIdValidation";
 const router = express.Router();
 
 //create a playlist
@@ -41,6 +44,8 @@ router.patch(
 );
 //get all playlists
 router.get("/all", isAuthenticated, getAllPlaylist);
+//get all playlists
+router.get("/all/:userId", isAuthenticated,validate(getUserPlaylistSchema, "params"), getAllPlaylistUser);
 //get all songs of a playlists
 router.get(
   "/:playlistId/songs",

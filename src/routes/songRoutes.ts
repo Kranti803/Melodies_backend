@@ -25,7 +25,7 @@ router.get("/all", isAuthenticated, getAllSongs);
 
 //get a single song details
 router.get(
-  "/:songId/playing",
+  "/:songId",
   isAuthenticated,
   validate(getSingleSongSchema, "params"),
   getSingleSong

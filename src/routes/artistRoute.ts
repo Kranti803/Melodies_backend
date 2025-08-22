@@ -13,7 +13,6 @@ router.get("/all", isAuthenticated, getAllArtists);
 router.get(
   "/:artistId/songs",
   isAuthenticated,
-  isAdmin,
   validate(getArtistSongsSchema, "params"),
   getArtistSongs
 );

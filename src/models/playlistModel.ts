@@ -1,5 +1,6 @@
 import { Schema, Types, model } from "mongoose";
 import { Iplaylist } from "../interfaces/playlistInterface";
+
 const playlistSchema = new Schema<Iplaylist>({
   playlistName: { type: String, required: true },
   description: { type: String, required: true },
@@ -8,5 +9,5 @@ const playlistSchema = new Schema<Iplaylist>({
     ref: "Song",
   },
 });
-const Playlist = model<Iplaylist>("playlist", playlistSchema);
+const Playlist = model<Iplaylist>("Playlist", playlistSchema);
 export default Playlist;

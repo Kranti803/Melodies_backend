@@ -32,3 +32,6 @@ export const getAllPlaylistSongsSchma = z.object({
 export const deletePlaylistSchema = z.object({
   playlistId: objectIdSchema,
 });
+export const getUserPlaylistSchema = z.object({
+  userId: objectIdSchema,
+});

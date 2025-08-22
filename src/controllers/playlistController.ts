@@ -1,9 +1,9 @@
+import { Types } from "mongoose";
 import { Request, Response, NextFunction } from "express";
 import catchAsyncError from "../utils/asyncHandler";
 import Playlist from "../models/playlistModel";
 import ErrorHandler from "../utils/errorHandler";
 import Song from "../models/songModel";
-import { Types } from "mongoose";
 import User from "../models/userModel";
 
 //create a playlist
@@ -67,13 +67,30 @@ export const removeFromPlaylist = catchAsyncError(
   }
 );
 
-//get all playlist
+//get all playlist for admin
 export const getAllPlaylist = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const playlists = await Playlist.find();
+
     res.status(200).json({
       success: true,
       playlists: playlists ?? [],
+    });
+  }
+);
+//get all playlist for user
+export const getAllPlaylistUser = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { userId } = req.params;
+    const user = await User.findById(userId).populate({
+      path: "playlists",
+      populate: { path: "songs" },
+    });
+    if (!user) return next(new ErrorHandler("User doesnot exists", 404));
+
+    res.status(200).json({
+      success: true,
+      playlists: user.playlists ?? [],
     });
   }
 );
