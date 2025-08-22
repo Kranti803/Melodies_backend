@@ -23,6 +23,20 @@ const router = express.Router();
 //get all songs
 router.get("/all", isAuthenticated, getAllSongs);
 
+//get all liked songs
+router.get("/liked", isAuthenticated, getAllLikedSongs);
+
+//add and remove liked songs
+router.patch(
+  "/liked/add_remove",
+  isAuthenticated,
+  validate(addAndRemoveFromLikedSchema, "body"),
+  addAndRemoveFromLiked
+);
+
+//get trending songs
+router.get("/recently_played_songs", isAuthenticated, getTrendingSongs);
+
 //get a single song details
 router.get(
   "/:songId",
@@ -30,6 +44,9 @@ router.get(
   validate(getSingleSongSchema, "params"),
   getSingleSong
 );
+
+//get user's recently played songs
+router.get("/recently_played_songs", isAuthenticated, getRecentlyPlayed);
 
 //increase the song played count
 router.patch(
@@ -46,22 +63,5 @@ router.put(
   validate(updateRecentlyPlayedSchema, "params"),
   updateRecentlyPlayed
 );
-
-//get user's recently played songs
-router.get("/recently_played_songs", isAuthenticated, getRecentlyPlayed);
-
-//get trending songs
-router.get("/recently_played_songs", isAuthenticated, getTrendingSongs);
-
-//add and remove liked songs
-router.patch(
-  "/liked/:songId/add_remove",
-  isAuthenticated,
-  validate(addAndRemoveFromLikedSchema, "params"),
-  addAndRemoveFromLiked
-);
-
-//get all liked songs
-router.patch("/liked", isAuthenticated, getAllLikedSongs);
 
 export default router;

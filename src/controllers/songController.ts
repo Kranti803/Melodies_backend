@@ -126,7 +126,7 @@ export const getTrendingSongs = catchAsyncError(
 //add and remove  liked song
 export const addAndRemoveFromLiked = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { songId } = req.params;
+    const { songId } = req.body;
 
     const song = await Song.findById(songId);
     if (!song) return next(new ErrorHandler("Song does not exist", 404));
