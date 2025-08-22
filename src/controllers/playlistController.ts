@@ -102,7 +102,7 @@ export const getAllPlaylistSongs = catchAsyncError(
     const playlist = await Playlist.findById(playlistId).populate("songs");
     res.status(200).json({
       success: true,
-      playlistSongs: playlist?.songs,
+      playlistWithSongs: playlist,
     });
   }
 );
