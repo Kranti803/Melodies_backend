@@ -17,7 +17,7 @@ export const createPlaylist = catchAsyncError(
     await user?.save();
     res.status(200).json({
       success: true,
-      mesage: "Playlist created successfully",
+      message: "Playlist created successfully",
     });
   }
 );

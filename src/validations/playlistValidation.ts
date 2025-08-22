@@ -11,7 +11,7 @@ export const createPlaylistSchem = z.object({
   description: z
     .string()
     .min(10, { message: "Name of playlist should be of minimum 10 characters" })
-    .max(30, {
+    .max(70, {
       message: "Name of the playist should not be more that 30 characters",
     })
     .trim(),
