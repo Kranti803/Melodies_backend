@@ -34,8 +34,10 @@ router.patch(
   addAndRemoveFromLiked
 );
 
+//get user's recently played songs
+router.get("/recently_played_songs", isAuthenticated, getRecentlyPlayed);
 //get trending songs
-router.get("/recently_played_songs", isAuthenticated, getTrendingSongs);
+router.get("/trending", isAuthenticated, getTrendingSongs);
 
 //get a single song details
 router.get(
@@ -44,9 +46,6 @@ router.get(
   validate(getSingleSongSchema, "params"),
   getSingleSong
 );
-
-//get user's recently played songs
-router.get("/recently_played_songs", isAuthenticated, getRecentlyPlayed);
 
 //increase the song played count
 router.patch(

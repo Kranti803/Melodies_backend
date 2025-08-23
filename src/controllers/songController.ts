@@ -88,14 +88,8 @@ export const updateRecentlyPlayed = catchAsyncError(
     user.recentlyPlayedSongs.splice(5);
 
     await user.save();
-
-    const updatedUser = await User.findById(userId).populate(
-      "recentlyPlayedSongs"
-    );
-
     res.status(200).json({
       success: true,
-      songs: updatedUser?.recentlyPlayedSongs,
     });
   }
 );
@@ -174,4 +168,3 @@ export const getAllLikedSongs = catchAsyncError(
     });
   }
 );
-
