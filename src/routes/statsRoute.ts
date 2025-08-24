@@ -25,7 +25,7 @@ router.get("/user_growth", isAuthenticated, isAdmin, getUserGrowthPerMonth);
 
 //get dshaboard graphs data of top 5 most played songs of last month
 router.get(
-  "/top_played_songs",
+  "/top_five_played_songs",
   isAuthenticated,
   isAdmin,
   getTopPlayedSongsLastMonth
