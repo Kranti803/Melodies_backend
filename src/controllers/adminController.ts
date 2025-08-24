@@ -34,12 +34,11 @@ export const uploadSong = catchAsyncError(
       common: { title, artists, album, year },
     } = (req as any).audioMetaData;
 
-    
     await Song.create({
       title,
       image: { public_id: cover_public_id, url: cover_secure_url },
       songUrl: { public_id: song_public_id, url: song_secure_url },
-      duration:format.duration,
+      duration: format.duration,
       artists,
       year,
       album,
@@ -138,6 +137,34 @@ export const deleteArtist = catchAsyncError(
     res.status(200).json({
       success: true,
       message: "Artist deleted successfully",
+    });
+  }
+);
+
+//get all the user
+export const getAllUser = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const users = await User.find();
+    res.status(200).json({
+      success: true,
+      users,
+    });
+  }
+);
+
+//change the user role
+export const changeUserRole = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { userId } = req.params;
+    let user = await User.findById(userId);
+    if (!user) return next(new ErrorHandler("User doesnot exists", 404));
+
+    user.role = user.role === "admin" ? "user" : "admin";
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Role to ${user.role} successfully`,
     });
   }
 );

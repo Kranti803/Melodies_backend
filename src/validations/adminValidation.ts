@@ -17,3 +17,4 @@ export const addArtistSchema = z.object({
 export const deleteArtistSchema = z.object({
   artistId: objectIdSchema,
 });
+export const changeUserRoleSchema = deleteUserSchema;

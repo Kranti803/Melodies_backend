@@ -5,14 +5,17 @@ import upload from "../middlewares/audioUpload";
 import extractAudioMetaData from "../middlewares/extractAudioMetaData";
 import {
   addArtist,
+  changeUserRole,
   deleteArtist,
   deleteSong,
   deleteUser,
+  getAllUser,
   uploadSong,
 } from "../controllers/adminController";
 import { validate } from "../middlewares/validate";
 import {
   addArtistSchema,
+  changeUserRoleSchema,
   deleteArtistSchema,
   deleteSongSchema,
   deleteUserSchema,
@@ -27,6 +30,18 @@ router.post(
   upload.single("audio"),
   extractAudioMetaData,
   uploadSong
+);
+
+//get all users
+router.get("/users", isAuthenticated, isAdmin, getAllUser);
+
+//chnage user role
+router.patch(
+  "/user/:userId/role",
+  isAuthenticated,
+  isAdmin,
+  validate(changeUserRoleSchema, "params"),
+  changeUserRole
 );
 
 //delete songs
