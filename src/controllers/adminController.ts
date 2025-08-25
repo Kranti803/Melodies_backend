@@ -12,6 +12,7 @@ import Artist from "../models/artistModel";
 //upload or create a new song
 export const uploadSong = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log("called1");
     const file = req.file;
     if (!file) return next(new ErrorHandler("File not found", 400));
 
@@ -103,7 +104,16 @@ export const addArtist = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;
     const file = req.file;
-    if (!file) return next(new ErrorHandler("All filds are required", 404));
+    if (!file || !name)
+      return next(new ErrorHandler("All filds are required", 404));
+
+    const existingArtist = await Artist.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
+
+    if (existingArtist) {
+      return next(new ErrorHandler("Artist already exists", 409));
+    }
 
     //uploading artist image
     const uploadedResult = await uploadImageToCloudinary(
